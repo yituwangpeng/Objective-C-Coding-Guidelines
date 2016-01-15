@@ -1115,3 +1115,28 @@ array.release;
 /** delegate */
 @property (nonatomic, weak) id <IPCConnectHandlerDelegate> delegate;
 ```
+###Bloc内部问使用self，要在外部使用__weak __typeof(self)weakSelf = self，然后在内部__strong __typeof(weakSelf)strongSelf = weakSelf，然后使用strongSelf。禁止直接_访问属性变量，应该使用strongSelf.访问。
+
+使用范例如下：
+```objective-c
+UIApplication *application = [UIApplication sharedApplication];
+        __weak __typeof(self)weakSelf = self;
+        self.backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+            __strong __typeof(weakSelf)strongSelf = weakSelf;
+            
+            if (handler) {
+                handler();
+            }
+            
+            if (strongSelf) {
+                [strongSelf cancel];
+                
+                [application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+                strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+            }
+        }];
+
+```
+##ViewController代码结构的规定
+读了iOS应用架构谈 view层的组织和调用方案之后，觉得其中一块View代码的规定不错，我们可以拿过来用一下。
+<https://github.com/qyer-inc/qyer_doc/wiki/ViewControllerCodingGuidelines>
