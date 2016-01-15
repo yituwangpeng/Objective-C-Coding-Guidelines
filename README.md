@@ -1115,7 +1115,8 @@ array.release;
 /** delegate */
 @property (nonatomic, weak) id <IPCConnectHandlerDelegate> delegate;
 ```
-###Bloc内部问使用self，要在外部使用__weak __typeof(self)weakSelf = self，然后在内部__strong __typeof(weakSelf)strongSelf = weakSelf，然后使用strongSelf。禁止直接_访问属性变量，应该使用strongSelf.访问。
+###Block的使用规范
+Block内部问使用self，要在外部使用__weak __typeof(self)weakSelf = self，然后在内部__strong __typeof(weakSelf)strongSelf = weakSelf，然后使用strongSelf。禁止直接_访问属性变量，应该使用strongSelf.访问。
 
 使用范例如下：
 ```objective-c
